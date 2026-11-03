@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Etsy → ShipGlobal settings</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <p class="eyebrow"><span class="mark"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" fill="currentColor"><path transform="rotate(45 12 12)" d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg></span>ShipGlobal for Etsy</p>
+      <h1>Settings</h1>
+      <p class="lede">Your ShipGlobal account, and the values every new order starts from.</p>
+    </div>
+  </header>
+
+  <div class="wrap layout">
+    <nav class="index" aria-label="Sections">
+      <a href="#account"><span>01</span>Account</a>
+      <a href="#defaults"><span>02</span>Shipping defaults</a>
+      <a href="#presets"><span>03</span>Package presets</a>
+      <a href="#customs"><span>04</span>Customs &amp; invoice</a>
+      <a href="#history"><span>05</span>Sent orders</a>
+    </nav>
+
+    <main>
+      <!-- 01 Account -->
+      <section id="account" class="block">
+        <div class="intro">
+          <h2><span class="idx">01</span>Account</h2>
+          <p>Your ShipGlobal login. Used to create orders and fetch rates. Stored only in this browser.</p>
+        </div>
+        <div class="body">
+          <div class="grid two">
+            <label class="field">
+              <span class="label">Email</span>
+              <input type="email" id="sgEmail" autocomplete="username">
+            </label>
+            <label class="field">
+              <span class="label">Password</span>
+              <input type="password" id="sgPassword" autocomplete="current-password">
+            </label>
+          </div>
+          <div class="row">
+            <button type="button" id="test" class="secondary">Test connection</button>
+            <span id="testResult" class="status" role="status"></span>
+          </div>
+          <div class="grid two">
+            <label class="field">
+              <span class="label">Customer nickname <span class="opt">Optional</span></span>
+              <input id="nickname" placeholder="Franchise accounts only">
+            </label>
+          </div>
+          <dl class="facts">
+            <dt>Dashboard session</dt>
+            <dd id="hsnSession" class="muted">Checking…</dd>
+          </dl>
+        </div>
+      </section>
+
+      <!-- 02 Shipping defaults -->
+      <section id="defaults" class="block">
+        <div class="intro">
+          <h2><span class="idx">02</span>Shipping defaults</h2>
+          <p>Pre-filled on every order. Change them per order in the popup.</p>
+        </div>
+        <div class="body">
+          <div class="grid service-row">
+            <label class="field">
+              <span class="label">Service</span>
+              <select id="service">
+                <option>ShipGlobal Direct</option>
+                <option>ShipGlobal First Class</option>
+                <option>ShipGlobal Premium</option>
+                <option>UPS Promotional</option>
+                <option>UPS</option>
+                <option>Fedex</option>
+              </select>
+            </label>
+            <label class="field">
+              <span class="label">Currency</span>
+              <select id="currency">
+                <option>USD</option><option>EUR</option><option>GBP</option><option>CAD</option>
+                <option>AUD</option><option>AED</option><option>SAR</option><option>INR</option>
+              </select>
+            </label>
+            <label class="field">
+              <span class="label">Export type</span>
+              <select id="csb5">
+                <option value="0">Normal</option>
+                <option value="1">CSB-5</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="sub">
+            <h3>Default package</h3>
+            <div class="package">
+              <div class="field">
+                <span class="label">Size  L × B × H</span>
+                <span class="unit">
+                  <span class="dim-row">
+                    <input id="length" type="number" step="0.1" min="0" inputmode="decimal" aria-label="Length">
+                    <i>×</i>
+                    <input id="breadth" type="number" step="0.1" min="0" inputmode="decimal" aria-label="Breadth">
+                    <i>×</i>
+                    <input id="height" type="number" step="0.1" min="0" inputmode="decimal" aria-label="Height">
+                  </span>
+                  <span>cm</span>
+                </span>
+              </div>
+              <label class="field">
+                <span class="label">Weight</span>
+                <span class="unit"><input id="weight" type="number" step="0.01" min="0" inputmode="decimal"><span>kg</span></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="sub">
+            <h3>When Etsy doesn’t share it</h3>
+            <div class="grid two">
+              <label class="field">
+                <span class="label">Buyer phone</span>
+                <input id="fallbackPhone" type="tel" placeholder="Used if the order has none">
+              </label>
+              <label class="field">
+                <span class="label">Buyer email</span>
+                <input id="fallbackEmail" type="email" placeholder="Used if the order has none">
+              </label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 03 Package presets -->
+      <section id="presets" class="block">
+        <div class="intro">
+          <h2><span class="idx">03</span>Package presets</h2>
+          <p>Boxes you ship in often. Apply one with a click from <b>Presets</b> on the popup’s Package step.</p>
+        </div>
+        <div class="body">
+          <div class="presets" role="table" aria-label="Package presets">
+            <div class="presets-head" role="row">
+              <span role="columnheader">Name</span>
+              <span role="columnheader">L</span>
+              <span role="columnheader">B</span>
+              <span role="columnheader">H</span>
+              <span role="columnheader">Weight</span>
+              <span></span>
+            </div>
+            <div id="presetRows"></div>
+            <p id="presetEmpty" class="empty" hidden>No presets yet.</p>
+          </div>
+          <button type="button" id="addPreset" class="text-btn">+ Add preset</button>
+        </div>
+      </section>
+
+      <!-- 04 Customs & invoice -->
+      <section id="customs" class="block">
+        <div class="intro">
+          <h2><span class="idx">04</span>Customs &amp; invoice</h2>
+          <p>Fallbacks for customs fields. HSN codes are usually filled per item from ShipGlobal’s suggestions.</p>
+        </div>
+        <div class="body">
+          <div class="grid two">
+            <label class="field">
+              <span class="label">Default HSN code</span>
+              <input id="hsn" inputmode="numeric" placeholder="8 digits — optional">
+            </label>
+            <label class="field">
+              <span class="label">Tax rate</span>
+              <span class="unit"><input id="taxRate" type="number" step="0.01" min="0" inputmode="decimal"><span>%</span></span>
+            </label>
+            <label class="field">
+              <span class="label">Invoice prefix</span>
+              <input id="invoicePrefix" placeholder="ETSY-">
+              <span class="note">Invoice no. will look like <b id="invoicePreview">ETSY-4220411712</b></span>
+            </label>
+            <label class="field">
+              <span class="label">IOSS number <span class="opt">Optional</span></span>
+              <input id="ioss" placeholder="For EU shipments">
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <!-- 05 Sent orders -->
+      <section id="history" class="block">
+        <div class="intro">
+          <h2><span class="idx">05</span>Sent orders</h2>
+          <p>Orders created from this browser. Used to warn you before sending one twice.</p>
+        </div>
+        <div class="body">
+          <div id="historyList"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="savebar">
+    <div class="wrap savebar-inner">
+      <span id="saveResult" class="status" role="status"></span>
+      <button type="button" id="revert" class="text-btn" hidden>Discard changes</button>
+      <button type="button" id="save" class="primary">Save changes</button>
+    </div>
+  </footer>
+
+  <script src="options.js"></script>
+</body>
+</html>

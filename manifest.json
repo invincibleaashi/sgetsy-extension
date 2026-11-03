@@ -1,0 +1,39 @@
+{
+  "manifest_version": 3,
+  "name": "Etsy → ShipGlobal",
+  "version": "1.0.0",
+  "description": "Pick an order from Etsy Shop Manager and create it on ShipGlobal.",
+  "permissions": ["storage", "scripting"],
+  "host_permissions": [
+    "https://www.etsy.com/your/*",
+    "https://app.shipglobal.in/*",
+    "https://v2.app.shipglobal.in/*",
+    "https://api.app.shipglobal.in/*",
+    "https://hsn.shipglobal.in/*",
+    "https://i.etsystatic.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Send Etsy order to ShipGlobal"
+  },
+  "options_page": "options.html",
+  "content_scripts": [
+    {
+      "matches": ["https://www.etsy.com/your/*"],
+      "js": ["src/countries.js", "src/extract.js", "src/content.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://v2.app.shipglobal.in/*", "https://app.shipglobal.in/*"],
+      "js": ["src/sg-session.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

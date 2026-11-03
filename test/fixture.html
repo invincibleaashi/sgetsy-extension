@@ -1,0 +1,86 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Etsy fixture</title></head>
+<body>
+<h1>Orders</h1>
+<div class="order-card">
+  <div><span>Order</span> <a href="https://www.etsy.com/your/orders/sold?order_id=3456789012">#3456789012</a></div>
+  <div class="address">
+    <p><span class="name">Jane Q Doe</span></p>
+    <p><span class="first-line">4 Building Name</span></p>
+    <p><span class="second-line">5th Street</span></p>
+    <p><span class="city">San Jose</span>, <span class="state">CA</span> <span class="zip">95134</span></p>
+    <p class="country-name">United States</p>
+  </div>
+  <div class="tx">
+    <a href="https://www.etsy.com/listing/111222333/blue-mug"><img alt="Blue ceramic mug" src="https://i.etsystatic.com/64399773/r/il/639217/8527859826/il_75x75.8527859826_g110.jpg"></a>
+    <a href="https://www.etsy.com/listing/111222333/blue-mug">Blue ceramic mug</a>
+    <div>Quantity: 2</div><div>$24.50</div><div>SKU: MUG-01</div>
+  </div>
+  <div class="tx">
+    <a href="https://www.etsy.com/listing/444555666/saree">Yellow silk saree</a>
+    <div>Quantity 1</div><div>$1,054.00</div>
+  </div>
+</div>
+<div class="order-card">
+  <div>Order #3456789099</div>
+  <address>Tom Smith<br>10 Downing Street<br>London SW1A 2AA<br>United Kingdom</address>
+  <div class="tx"><a href="https://www.etsy.com/listing/777/print">Art print</a> <span>1 x</span> <span>£12.00</span></div>
+</div>
+<div class="order-card etsy-like">
+  <div class="flag">
+    <div class="flag-body">
+      <div><span><a href="https://www.etsy.com/your/orders/sold?order_id=4220411799">#4220411799</a></span> <span>$151.98</span></div>
+      <div class="flag mt-xs-2">
+        <div class="flag-img"><img src="https://i.etsystatic.com/64399773/r/il/639217/8527859826/il_75x75.8527859826_g110.jpg" alt="Copper bottle"><img class="mobile" src="https://i.etsystatic.com/64399773/r/il/639217/8527859826/il_75x75.8527859826_g110.jpg" alt=""></div>
+        <div class="flag-body">
+          <div class="break-word">Pure Copper Water Bottle, 1.1L, Locking Flip-Top Lid</div>
+          <ul>
+            <li><div><span>Quantity</span><span>2</span></div></li>
+            <li><div><span>Choose your style</span><span>Ribbed</span></div></li>
+            <li><div><div class="break-word">Add a Personal Gift Note</div><div class="break-word">Happy <mark>Birthday</mark>!
+Love, TLA</div></div><div></div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="buyer-note"><span>Note from buyer</span><p>Please ship before the 10th — it's for my mum's birthday.</p></div>
+    </div>
+    <div class="address"><p><span class="name">Jennifer Erdmann</span><br><span class="first-line">920 210th Ave SW</span><br><span class="city">Appleton</span>, <span class="state">MN</span> <span class="zip">56208</span><br><span class="country-name">United States</span><br><span class="phone">(320)555-0147</span></p></div>
+  </div>
+</div>
+<div role="dialog" class="help-widget" style="position:fixed;left:0;bottom:0;width:200px;height:60px;background:#ddd"><h3>Need help?</h3><button>Chat</button></div>
+<script>
+  // Fake Etsy order details panel: clicking an order link opens it, "Close" removes it.
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[href*="order_id="]');
+    if (!a) return;
+    e.preventDefault();
+    const id = a.href.match(/order_id=(\d+)/)[1];
+    document.querySelector('.fake-panel-wrap')?.remove();
+    setTimeout(() => {
+      const wrap = document.createElement('div');
+      wrap.className = 'fake-panel-wrap';
+      wrap.innerHTML = `<button>Close</button><div class="peek-overlay" style="position:fixed;right:0;top:0;width:300px;height:200px;background:#eee">
+        <p>Buyer expects delivery by: Nov 8-10</p>
+        <h5>Selected by buyer</h5><div><div><span>Express Shipping</span><p>$12.00</p><span>Item</span></div></div><div><div><span>Only you can see this note</span></div><p>Wrap in tissue paper</p><button>Edit private note</button></div><ul><li><span>Item total</span><span>$140.00</span></li><li><span>Shipping price</span><span>$12.00</span></li><li><span>Order total</span><span>$151.98</span></li></ul></div>`;
+      wrap.querySelector('button').onclick = () => { wrap.remove(); history.replaceState(null, '', location.pathname); };
+      document.body.append(wrap);
+      history.replaceState(null, '', `${location.pathname}?order_id=${id}`);
+    }, 300);
+  });
+</script>
+<script>window.__presets = [{ name: 'Small box', length: '20', breadth: '15', height: '10', weight: '0.5' }, { name: 'Bottle tube', length: '32', breadth: '10', height: '10', weight: '0.9' }];
+window.chrome = { runtime: { id: "test-extension", sendMessage: async (m) => (console.log('msg', m), m.type === 'classifyHsn' ? { ok: true, result: { source: m.image ? 'photo' : 'name', primary: { indian_hsn_code: '74181022', simple_hsn_text: 'Copper household articles', description: 'Copper bottle', usa_hsn_code: '7418100000', confidence: 0.92 }, suggestions: [{ indian_hsn_code: '74181022', simple_hsn_text: 'Copper household articles', confidence: 0.95 }, { indian_hsn_code: '74199930', simple_hsn_text: 'Other copper articles', confidence: 0.85 }] } } : m.type === 'rates' ? { ok: true, result: { currency: 'INR', services: [{ title: 'ShipGlobal Direct', transit_time: '7-10 Days', subtotal_fee: 300 }, { title: 'ShipGlobal Premium', transit_time: '6-9 Days', subtotal_fee: 733 }, { title: 'UPS', notes: 'Duties will be charged, if applicable.', transit_time: '4 - 7 Days', subtotal_fee: 2247 }] } } : m.type === 'savePreset' ? { ok: true, result: (window.__presets = [...window.__presets, m.preset]) } : m.type === 'getSettings' ? { ok: true, result: { packagePresets: window.__presets, hasHsnSession: true, fallbackPhone: '+91 99999 00000', hasCredentials: false, hsn: '', itemMemory: { 'art print': { hsn: '49119100', tax: '0' } }, weight: '0.5', length: '10', breadth: '10', height: '10', createdOrders: { '3456789099': { createdAt: '2026-11-01T10:00:00Z', tracking: 'SG123' } } } } : { ok: false, error: 'stub' }), onMessage: { addListener() {} } } };</script>
+<script>
+  // Load the extension scripts in order, bypassing the cache so edits show up on reload.
+  (async () => {
+    for (const f of ['countries', 'extract', 'content']) {
+      await new Promise((ok) => {
+        const s = document.createElement('script');
+        s.src = `../src/${f}.js?v=${Date.now()}`;
+        s.onload = ok;
+        document.body.append(s);
+      });
+    }
+  })();
+</script>
+</body></html>
