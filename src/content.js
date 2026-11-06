@@ -158,9 +158,15 @@
 
   function injectButtons() {
     if (!alive()) return observer.disconnect(); // cut off by an extension reload
-    // Order cards in the list: under the truck / message / ⋮ icons.
+    // Order cards in the list: under the truck / message / ⋮ icons — new orders only.
+    // A completed (shipped) order gets no button, and loses it if marked complete while open.
     for (const { orderId, anchor, scope } of window.SG_findOrders()) {
-      if (listButtons.get(orderId)?.isConnected) continue;
+      const existing = listButtons.get(orderId);
+      if (window.SG_isCompleted(scope)) {
+        if (existing?.isConnected) existing.remove();
+        continue;
+      }
+      if (existing?.isConnected) continue;
       const stack = iconStack(anchor);
       let btn;
       if (stack) {
@@ -177,7 +183,10 @@
     // Order details panel: next to "Order actions", same size. The panel is reused between
     // orders, so read the order number when clicked rather than now.
     const panel = window.SG_openPanel();
-    if (panel && !panel.el.querySelector(`[${BTN_ATTR}]`)) {
+    const panelButton = panel?.el.querySelector(`[${BTN_ATTR}]`);
+    if (panel && window.SG_isCompleted(panel.el)) {
+      panelButton?.remove();
+    } else if (panel && !panelButton) {
       const btn = makeTextButton(() => window.SG_openPanel()?.orderId || panel.orderId, 'wt-mr-xs-2');
       const actions = [...panel.el.querySelectorAll('button')].find((b) => /^order actions/i.test(b.textContent.trim()));
       const menu = actions?.closest('.wt-menu');
@@ -249,20 +258,25 @@
     window.__sgTeardown = null;
   };
 
-  // Shown when this copy of the script has been cut off by an extension reload.
-  function showStale() {
-    backdrop.replaceChildren(el('div', { class: 'panel stale', role: 'alertdialog', 'aria-label': 'Extension updated' },
+  // A small message dialog. action: optional [label, onClick] for a primary button.
+  function showMessage(title, text, action) {
+    backdrop.replaceChildren(el('div', { class: 'panel stale', role: 'alertdialog', 'aria-label': title },
       el('header', {},
         el('div', { class: 'title' },
           el('p', { class: 'eyebrow' }, planeMark(), 'ShipGlobal'),
-          el('h2', {}, 'Refresh to continue'),
-          el('p', { class: 'meta' }, STALE)),
+          el('h2', {}, title),
+          el('p', { class: 'meta' }, text)),
         el('button', { type: 'button', class: 'icon-btn', 'aria-label': 'Close', onclick: closeForm }, '×')),
       el('footer', {},
         el('div', { class: 'status' }),
-        el('button', { type: 'button', class: 'text-btn', onclick: closeForm }, 'Not now'),
-        el('button', { type: 'button', class: 'primary', onclick: () => location.reload() }, 'Refresh page'))));
+        el('button', { type: 'button', class: action ? 'text-btn' : 'primary', onclick: closeForm }, action ? 'Not now' : 'OK'),
+        action ? el('button', { type: 'button', class: 'primary', onclick: action[1] }, action[0]) : null)));
     backdrop.hidden = false;
+  }
+
+  // Shown when this copy of the script has been cut off by an extension reload.
+  function showStale() {
+    showMessage('Refresh to continue', STALE, ['Refresh page', () => location.reload()]);
   }
 
   let settings = {};
@@ -279,7 +293,8 @@
     if (orderId) {
       orders = [window.SG_orderById(orderId) || { orderId }];
     } else {
-      orders = window.SG_extractOrders();
+      orders = window.SG_extractOrders().filter((o) => !window.SG_isCompleted(o.scope));
+      if (!orders.length) return showMessage('No new orders here', 'Send to ShipGlobal works on new orders — ones not yet marked complete or shipped.');
       selected = Math.max(0, orders.findIndex((o) => lastClicked && o.scope?.contains(lastClicked)));
     }
     renderForm(selected);

@@ -336,6 +336,18 @@
     return null;
   }
 
+  // ---- Order status -------------------------------------------------------------------
+  // Shipped / completed orders carry one of Etsy's "Completed status" values as their status
+  // heading (on the order card, and under "Order from …" in the details panel). New orders —
+  // not yet marked complete — have none of these.
+  const COMPLETED_STATUS = /^(pre-transit|in transit|delivered|no tracking|cancel+ed|completed|digital|shipped|refunded|returned)$/i;
+  function isCompleted(scope) {
+    if (!scope) return false;
+    return [...scope.querySelectorAll('h1, h2, h3, h4, p, span, a, div')]
+      // (Not the page's filter sidebar, whose radio labels use the same words.)
+      .some((e) => e.childElementCount === 0 && !e.closest('label, form, fieldset') && COMPLETED_STATUS.test(rawText(e)));
+  }
+
   // Shop Manager's order details open in a side panel (.peek-overlay) over the list. Other
   // dialogs (help widget, banners, menus) only count if they hold an order's address.
   function openPanel() {
@@ -503,6 +515,7 @@
   window.SG_findOrders = findOrders;
   window.SG_orderById = orderById;
   window.SG_openPanel = openPanel;
+  window.SG_isCompleted = isCompleted;
   window.SG_shippingFromPanel = shippingFromPanel;
   window.SG_buyerNoteFromPanel = buyerNoteFromPanel;
   window.SG_receiptFromPanel = receiptFromPanel;

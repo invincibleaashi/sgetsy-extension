@@ -88,6 +88,9 @@ are suggested from the product photo instead (see [HSN codes](#hsn-codes)).
 1. In Etsy, open **Shop Manager → Orders & Shipping**.
 2. Find the order and click the orange **✈** under its truck / message / ⋮ icons — or open
    the order and click **Send to ShipGlobal** next to **Order actions**.
+   The button appears on **new orders only** — ones not yet marked complete. Orders with a
+   completed status (Pre-transit, In transit, Delivered, No tracking, Canceled, Digital) don't
+   get one, and an order's button disappears as soon as you mark it complete.
 3. The popup opens with everything Etsy knows already filled in. Work down the left side:
 
    | Step | What to check |
@@ -173,8 +176,9 @@ ShipGlobal tabs pick up the new version automatically; no page refresh needed.
 
 ## Troubleshooting
 
-**No ✈ icons on my orders.** Make sure you're on an Etsy Shop Manager orders page
-(`etsy.com/your/orders/...`) and the extension is enabled. If you just reloaded the extension
+**No ✈ icons on my orders.** The button only appears on new orders — anything already
+marked complete or shipped doesn't get one. Otherwise, make sure you're on an Etsy Shop
+Manager orders page (`etsy.com/your/orders/...`) and the extension is enabled. If you just reloaded the extension
 and a popup says *Refresh to continue*, refresh the page.
 
 **"ShipGlobal login missing" / order creation fails with an auth error.** Re-enter your
